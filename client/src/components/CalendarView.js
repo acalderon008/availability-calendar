@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
-import { Share2, Users, Clock, Plus, Copy, Check } from 'lucide-react';
+import { Users, Clock, Copy, Check } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import moment from 'moment';
-import { getParticipantColor, getParticipantColors } from '../utils/colors';
+import { getParticipantColor } from '../utils/colors';
 import { isHoliday, getHolidayName } from '../utils/holidays';
 import 'react-calendar/dist/Calendar.css';
 
@@ -13,15 +13,10 @@ const CalendarView = ({ userName }) => {
   const { id } = useParams();
   const [calendar, setCalendar] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedDates, setSelectedDates] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    fetchCalendar();
-  }, [id]);
-
-  const fetchCalendar = async () => {
+  const fetchCalendar = useCallback(async () => {
     try {
       const response = await axios.get(`/api/calendars/${id}`);
       if (response.data.success) {
@@ -33,7 +28,11 @@ const CalendarView = ({ userName }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchCalendar();
+  }, [fetchCalendar]);
 
   const handleDateChange = async (value) => {
     let dates = [];
@@ -54,8 +53,6 @@ const CalendarView = ({ userName }) => {
       dates = [moment(value).format('YYYY-MM-DD')];
     }
     
-    setSelectedDates(dates);
-    
     // Automatically add availability if we have dates and a user name
     if (dates.length > 0 && userName) {
       await addAvailability(dates);
@@ -75,7 +72,6 @@ const CalendarView = ({ userName }) => {
       
       if (response.data.success) {
         toast.success('Availability added automatically!');
-        setSelectedDates([]);
         fetchCalendar(); // Refresh to show new availability
       }
     } catch (error) {

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import { Users, Clock, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import moment from 'moment';
-import { getParticipantColor, getParticipantColors } from '../utils/colors';
+import { getParticipantColor } from '../utils/colors';
 import { isHoliday, getHolidayName } from '../utils/holidays';
 import 'react-calendar/dist/Calendar.css';
 
@@ -13,14 +13,9 @@ const SharedCalendar = ({ userName }) => {
   const { shareId } = useParams();
   const [calendar, setCalendar] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedDates, setSelectedDates] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchCalendar();
-  }, [shareId]);
-
-  const fetchCalendar = async () => {
+  const fetchCalendar = useCallback(async () => {
     try {
       const response = await axios.get(`/api/share/${shareId}`);
       if (response.data.success) {
@@ -32,7 +27,11 @@ const SharedCalendar = ({ userName }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [shareId]);
+
+  useEffect(() => {
+    fetchCalendar();
+  }, [fetchCalendar]);
 
   const handleDateChange = async (value) => {
     let dates = [];
@@ -53,8 +52,6 @@ const SharedCalendar = ({ userName }) => {
       dates = [moment(value).format('YYYY-MM-DD')];
     }
     
-    setSelectedDates(dates);
-    
     // Automatically add availability if we have dates and a user name
     if (dates.length > 0 && userName) {
       await addAvailability(dates);
@@ -74,7 +71,6 @@ const SharedCalendar = ({ userName }) => {
       
       if (response.data.success) {
         toast.success('Availability added automatically!');
-        setSelectedDates([]);
         fetchCalendar(); // Refresh to show new availability
       }
     } catch (error) {
