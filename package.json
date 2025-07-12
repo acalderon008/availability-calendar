@@ -2,6 +2,7 @@
   "name": "availability-calendar",
   "version": "1.0.0",
   "description": "A web application for coordinating availability with friends",
+  "homepage": "https://acalderon008.github.io/availability-calendar",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
