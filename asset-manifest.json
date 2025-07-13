@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/availability-calendar/static/css/main.8a9caa0e.css",
+    "main.js": "/availability-calendar/static/js/main.a0070714.js",
+    "index.html": "/availability-calendar/index.html",
+    "main.8a9caa0e.css.map": "/availability-calendar/static/css/main.8a9caa0e.css.map",
+    "main.a0070714.js.map": "/availability-calendar/static/js/main.a0070714.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8a9caa0e.css",
+    "static/js/main.a0070714.js"
+  ]
+}
