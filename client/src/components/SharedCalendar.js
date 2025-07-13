@@ -15,34 +15,23 @@ const SharedCalendar = ({ userName }) => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // Debug logging
-  console.log('SharedCalendar component - shareId from params:', shareId);
-  console.log('Current URL:', window.location.href);
+
 
   const fetchCalendar = useCallback(async () => {
     try {
-      console.log('Fetching calendar for share ID:', shareId);
       const response = await api.get(`/api/share/${shareId}`);
-      console.log('Calendar response:', response.data);
       if (response.data.success) {
         setCalendar(response.data.calendar);
       }
     } catch (error) {
       console.error('Error fetching calendar:', error);
-      console.error('Error details:', {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data
-      });
-      toast.error(`Failed to load calendar: ${error.response?.status || error.message}`);
+      toast.error('Failed to load calendar');
     } finally {
       setLoading(false);
     }
   }, [shareId]);
 
   useEffect(() => {
-    console.log('SharedCalendar useEffect triggered');
-    console.log('shareId in useEffect:', shareId);
     fetchCalendar();
   }, [fetchCalendar]);
 
