@@ -8,14 +8,35 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://acalderon008.github.io', 'http://localhost:3000', 'http://localhost:5000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
+
+// Add request logging for debugging
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
+  next();
+});
 
 // In-memory storage (in production, use a database)
 const calendars = new Map();
 const sharedCalendars = new Map();
 
 // API Routes
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    port: PORT
+  });
+});
 
 // Create a new calendar
 app.post('/api/calendars', (req, res) => {
@@ -110,9 +131,17 @@ app.get('/api/calendars', (req, res) => {
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the build directory
   app.use(express.static(path.join(__dirname, 'client/build')));
   
-  app.get('*', (req, res) => {
+  // Handle client-side routing - serve index.html for all non-API routes
+  app.get('*', (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
+    
+    // Serve index.html for client-side routing
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
