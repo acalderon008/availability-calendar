@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Plus, Share2, Users, Clock } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 
 const Home = () => {
@@ -15,7 +15,7 @@ const Home = () => {
 
   const fetchRecentCalendars = async () => {
     try {
-      const response = await axios.get('/api/calendars');
+      const response = await api.get('/api/calendars');
       setRecentCalendars(response.data.calendars.slice(0, 3)); // Show only 3 most recent
     } catch (error) {
       console.error('Error fetching calendars:', error);
@@ -31,7 +31,7 @@ const Home = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`/api/share/${shareId.trim()}`);
+      const response = await api.get(`/api/share/${shareId.trim()}`);
       if (response.data.success) {
         window.location.href = `/share/${shareId.trim()}`;
       }

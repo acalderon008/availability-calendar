@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Plus, Copy, Check } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 
 const CreateCalendar = () => {
@@ -23,7 +23,7 @@ const CreateCalendar = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('/api/calendars', formData);
+      const response = await api.post('/api/calendars', formData);
       if (response.data.success) {
         setCreatedCalendar(response.data.calendar);
         toast.success('Calendar created successfully!');

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import { Users, Clock, Copy, Check } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import { getParticipantColor } from '../utils/colors';
@@ -18,7 +18,7 @@ const CalendarView = ({ userName }) => {
 
   const fetchCalendar = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/calendars/${id}`);
+      const response = await api.get(`/api/calendars/${id}`);
       if (response.data.success) {
         setCalendar(response.data.calendar);
       }
@@ -64,7 +64,7 @@ const CalendarView = ({ userName }) => {
     
     setSubmitting(true);
     try {
-      const response = await axios.post(`/api/calendars/${id}/availability`, {
+      const response = await api.post(`/api/calendars/${id}/availability`, {
         name: userName,
         dates: dates,
         times: [] // No time slots needed
