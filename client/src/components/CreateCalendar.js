@@ -45,7 +45,7 @@ const CreateCalendar = () => {
   };
 
   const copyShareLink = async () => {
-    const shareUrl = `${window.location.origin}/share/${createdCalendar.shareId}`;
+    const shareUrl = `${window.location.origin}/#/share/${createdCalendar.shareId}`;
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
@@ -84,7 +84,7 @@ const CreateCalendar = () => {
                 <input
                   type="text"
                   className="form-input"
-                  value={`${window.location.origin}/share/${createdCalendar.shareId}`}
+                  value={`${window.location.origin}/#/share/${createdCalendar.shareId}`}
                   readOnly
                 />
                 <button

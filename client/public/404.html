@@ -47,14 +47,17 @@
         const basePath = '/availability-calendar';
         const cleanPath = path.replace(basePath, '');
         
-        // For hash routing, we need to handle the path differently
+        // Convert the path to a hash route
+        let hashPath = '';
+        
         if (cleanPath && cleanPath !== '/') {
-            // Redirect to the React app with the correct hash path
-            window.location.href = basePath + '/#' + cleanPath;
-        } else {
-            // Just redirect to the main app
-            window.location.href = basePath + '/';
+            // Remove leading slash and convert to hash route
+            hashPath = cleanPath.replace(/^\//, '');
         }
+        
+        // Redirect to the React app with the correct hash path
+        const redirectUrl = basePath + '/' + (hashPath ? '#' + hashPath : '');
+        window.location.replace(redirectUrl);
     </script>
 </body>
 </html> 

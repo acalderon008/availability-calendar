@@ -33,7 +33,7 @@ const Home = () => {
     try {
       const response = await api.get(`/api/share/${shareId.trim()}`);
       if (response.data.success) {
-        window.location.href = `/share/${shareId.trim()}`;
+        window.location.href = `/#/share/${shareId.trim()}`;
       }
     } catch (error) {
       toast.error('Invalid share ID or calendar not found');

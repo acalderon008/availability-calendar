@@ -83,7 +83,7 @@ const CalendarView = ({ userName }) => {
   };
 
   const copyShareLink = async () => {
-    const shareUrl = `${window.location.origin}/share/${calendar.shareId}`;
+    const shareUrl = `${window.location.origin}/#/share/${calendar.shareId}`;
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
